@@ -13,31 +13,24 @@ public class Main
             ThreadLetras a = new ThreadLetras();
             ThreadCommand b = new ThreadCommand(command);
             ThreadOperaciones c = new ThreadOperaciones //Pasamos los parametros como integers
-                    (Integer.parseInt(args[1]),Integer.parseInt(args[0]));
+                    (Integer.parseInt(args[0]),Integer.parseInt(args[1]));
 
             synchronized (a) //Con esto estamos pendientes al synchronized del hilo a
             {
                 a.start();  //Ejecuta el run del hilo a
-                System.out.println("Esperando a que acabe a ...");
                 a.wait(); //Esperamos a que el run() synchronized de a nos diga notify()
-                System.out.println("a Terminado");
             }
             synchronized (b) //Con esto estamos pendientes al synchronized del hilo b
             {
                 b.start();  //Ejecuta el run del hilo b
-                System.out.println("Esperando a que acabe b ...");
                 b.wait(); //Esperamos a que el run() synchronized de b nos diga notify()
-                System.out.println("b Terminado");
             }
             synchronized (c) //Con esto estamos pendientes al synchronized del hilo c
             {
                 c.start();  //Ejecuta el run del hilo b
-                System.out.println("Esperando a que acabe c ...");
                 c.wait(); //Esperamos a que el run() synchronized de c nos diga notify()
                 //c.getTotal() //??? Preguntar a moi
-                System.out.println("c Terminado");
             }
-            System.out.println("Finalizado main");
         }
         else
             System.out.println("Parametros insuficientes");
