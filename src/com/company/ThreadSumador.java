@@ -7,7 +7,7 @@ public class ThreadSumador extends Thread
 {
     private int a,b,result;
 
-    ThreadSumador(int a,int b) //Combinaciones de k en n 0<=k<=n
+    ThreadSumador(int a,int b) 
     {
         this.a=a;
         this.b=b;

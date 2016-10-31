@@ -2,15 +2,14 @@ package com.company;
 
 public class Main
 {
-    private static final String command = "ps -fea | grep -i root"; //Mostrar procesos corriendo pertenecientes al root
-
     public static void main(String[] args) throws InterruptedException
     {
         int size=100;
         int[] first = new int[size];
         int[] second = new int[size];
         int[] result = new int[size];
-        //ThreadSumador[] hilosSumadores = new ThreadSumador[size];
+
+        ThreadSumador[] hilosSumadores = new ThreadSumador[size];
 
         for (int i = 0; i < size; i++) //Inizializar arreglos con su index como valor
         {
@@ -18,21 +17,31 @@ public class Main
             second[i]=i+1;
         }
 
-        for (int i = 0; i < size; i++) //Iteramos sobre las sumas
+        for (int i = 0; i < size; i++) //Creamos los hilos y los disparamos
         {
-            ThreadSumador current = new ThreadSumador(first[i],second[i]);
+            hilosSumadores[i] = new ThreadSumador(first[i],second[i]);
+            hilosSumadores[i].start();
+        }
 
-            synchronized (current)
+        for (int i = 0; i < size; i++) //Guardamos sus resultados
+        {
+            synchronized (hilosSumadores[i])
             {
-                current.start();
-                current.wait();
-                result[i] = current.getResult();
+                if (hilosSumadores[i].isAlive()) //Si esta vivo este hilo esperamos a que acabe
+                {
+                    hilosSumadores[i].wait();
+                }
+                result[i] = hilosSumadores[i].getResult(); //Guardamos su resultado
             }
         }
-
-        for (int i = 0; i < size; i++)
+        printArray(result);
+    }
+    static void printArray(int[] arr)
+    {
+        for (int i = 0; i < arr.length; i++)
         {
-            System.out.println(result[i]);
+            System.out.println(arr[i]);
         }
+
     }
 }
