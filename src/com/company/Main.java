@@ -6,33 +6,33 @@ public class Main
 
     public static void main(String[] args) throws InterruptedException
     {
-        args = new String[]{"10","2"}; //En terminal se mandaria a llamar el "ejecutable 10 2"
+        int size=100;
+        int[] first = new int[size];
+        int[] second = new int[size];
+        int[] result = new int[size];
+        //ThreadSumador[] hilosSumadores = new ThreadSumador[size];
 
-        if (args.length == 2)
+        for (int i = 0; i < size; i++) //Inizializar arreglos con su index como valor
         {
-            ThreadLetras a = new ThreadLetras();
-            ThreadCommand b = new ThreadCommand(command);
-            ThreadOperaciones c = new ThreadOperaciones //Pasamos los parametros como integers
-                    (Integer.parseInt(args[0]),Integer.parseInt(args[1]));
+            first[i]=i+1;
+            second[i]=i+1;
+        }
 
-            synchronized (a) //Con esto estamos pendientes al synchronized del hilo a
+        for (int i = 0; i < size; i++) //Iteramos sobre las sumas
+        {
+            ThreadSumador current = new ThreadSumador(first[i],second[i]);
+
+            synchronized (current)
             {
-                a.start();  //Ejecuta el run del hilo a
-                a.wait(); //Esperamos a que el run() synchronized de a nos diga notify()
-            }
-            synchronized (b) //Con esto estamos pendientes al synchronized del hilo b
-            {
-                b.start();  //Ejecuta el run del hilo b
-                b.wait(); //Esperamos a que el run() synchronized de b nos diga notify()
-            }
-            synchronized (c) //Con esto estamos pendientes al synchronized del hilo c
-            {
-                c.start();  //Ejecuta el run del hilo b
-                c.wait(); //Esperamos a que el run() synchronized de c nos diga notify()
-                //c.getTotal() //??? Preguntar a moi
+                current.start();
+                current.wait();
+                result[i] = current.getResult();
             }
         }
-        else
-            System.out.println("Parametros insuficientes");
+
+        for (int i = 0; i < size; i++)
+        {
+            System.out.println(result[i]);
+        }
     }
 }
